@@ -15,7 +15,7 @@ import { Star } from "lucide-react";
 import { z } from "zod";
 
 const reviewFormSchema = insertReviewSchema.extend({
-  rating: z.number().min(1).max(5),
+  rating: z.number().min(1, "Please select a rating").max(5),
   message: z.string().min(10, "Review must be at least 10 characters long"),
 });
 
@@ -71,6 +71,14 @@ export default function ReviewsSection() {
   };
 
   const onSubmit = (data: z.infer<typeof reviewFormSchema>) => {
+    if (data.rating === 0) {
+      toast({
+        title: "Rating Required",
+        description: "Please select a star rating before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
     addReviewMutation.mutate(data);
   };
 

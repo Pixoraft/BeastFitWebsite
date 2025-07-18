@@ -49,7 +49,7 @@ ${variables.message ? `Message: ${variables.message}` : ''}
 
 I would like to learn more about BeastFit Arena.`;
 
-      window.open(`https://wa.me/15551234567?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/919111606607?text=${encodeURIComponent(message)}`, '_blank');
       
       form.reset();
       toast({
@@ -98,7 +98,7 @@ I would like to learn more about BeastFit Arena.`;
                 <Phone className="text-primary text-xl mt-1" />
                 <div>
                   <h4 className="font-semibold mb-1">Phone</h4>
-                  <p className="text-gray-300">+1 (555) 123-4567</p>
+                  <p className="text-gray-300">+91 91116 06607</p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">

@@ -18,7 +18,7 @@ export default function Navigation() {
   };
 
   const openWhatsApp = () => {
-    window.open('https://wa.me/15551234567?text=Hi! I have a question about BeastFit Arena.', '_blank');
+    window.open('https://wa.me/919111606607?text=Hi! I have a question about BeastFit Arena.', '_blank');
   };
 
   const NavLinks = ({ mobile = false }) => (

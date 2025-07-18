@@ -35,7 +35,7 @@ export default function MembershipSection() {
       });
 
       const message = `Hi! I'm interested in the ${planType.toUpperCase()} membership plan. Please provide more details.`;
-      window.open(`https://wa.me/15551234567?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/919111606607?text=${encodeURIComponent(message)}`, '_blank');
       
       toast({
         title: "Inquiry Sent!",

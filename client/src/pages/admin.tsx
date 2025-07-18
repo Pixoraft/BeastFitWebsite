@@ -94,6 +94,44 @@ export default function Admin() {
           </Button>
         </div>
 
+        {/* Admin Help Card */}
+        <Card className="mb-8 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-bold mb-4 text-primary">📊 Admin Dashboard Access Guide</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold mb-2">🔑 Login Credentials:</h3>
+                <div className="bg-secondary/50 p-3 rounded font-mono text-sm">
+                  <p>Email: admin@beastfitarena.com</p>
+                  <p>Password: admin123</p>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">📱 Contact Information:</h3>
+                <div className="bg-secondary/50 p-3 rounded text-sm">
+                  <p>WhatsApp: +91 91116 06607</p>
+                  <p>All inquiries will be sent to this number</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <h3 className="font-semibold mb-2">💡 Dashboard Features:</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <ul className="space-y-1">
+                  <li>• Track monthly visitors automatically</li>
+                  <li>• View all registered users</li>
+                  <li>• Export user data as CSV</li>
+                </ul>
+                <ul className="space-y-1">
+                  <li>• Monitor customer reviews</li>
+                  <li>• Manage membership inquiries</li>
+                  <li>• View contact form submissions</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Stats Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           <Card>

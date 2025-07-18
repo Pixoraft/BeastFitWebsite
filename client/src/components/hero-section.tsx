@@ -17,7 +17,7 @@ export default function HeroSection() {
       scrollToSection('auth');
     } else {
       const message = 'Hi! I would like to book a free trial session at BeastFit Arena.';
-      window.open(`https://wa.me/15551234567?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/919111606607?text=${encodeURIComponent(message)}`, '_blank');
     }
   };
 
