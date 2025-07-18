@@ -42,27 +42,15 @@ export default function Admin() {
   });
 
   const exportUsers = () => {
-    const csvContent = [
-      ['Name', 'Email', 'Phone', 'Age', 'Goal', 'Created At'],
-      ...users.map((user: any) => [
-        user.name,
-        user.email,
-        user.phone,
-        user.age,
-        user.goal,
-        new Date(user.createdAt).toLocaleDateString()
-      ])
-    ]
-    .map(row => row.join(','))
-    .join('\n');
+    window.open('/api/admin/export/users', '_blank');
+  };
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'beastfit-users.csv';
-    link.click();
-    window.URL.revokeObjectURL(url);
+  const exportInquiries = () => {
+    window.open('/api/admin/export/inquiries', '_blank');
+  };
+
+  const exportReviews = () => {
+    window.open('/api/admin/export/reviews', '_blank');
   };
 
   if (statsLoading || usersLoading || inquiriesLoading || reviewsLoading) {
@@ -88,10 +76,20 @@ export default function Admin() {
             </Button>
             <h1 className="text-3xl font-bold">BeastFit Arena - Admin Dashboard</h1>
           </div>
-          <Button onClick={exportUsers} className="flex items-center space-x-2">
-            <Download className="h-4 w-4" />
-            <span>Export Users</span>
-          </Button>
+          <div className="flex space-x-2">
+            <Button onClick={exportUsers} className="flex items-center space-x-2">
+              <Download className="h-4 w-4" />
+              <span>Export Users</span>
+            </Button>
+            <Button onClick={exportInquiries} variant="outline" className="flex items-center space-x-2">
+              <Download className="h-4 w-4" />
+              <span>Export Inquiries</span>
+            </Button>
+            <Button onClick={exportReviews} variant="outline" className="flex items-center space-x-2">
+              <Download className="h-4 w-4" />
+              <span>Export Reviews</span>
+            </Button>
+          </div>
         </div>
 
         {/* Admin Help Card */}

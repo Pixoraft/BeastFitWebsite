@@ -23,6 +23,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const user = await storage.createUser(userData);
       const { password, ...userWithoutPassword } = user;
+      
+      // Store session on server (simple in-memory session)
+      req.session = req.session || {};
+      req.session.userId = user.id;
+      
       res.json({ user: userWithoutPassword });
     } catch (error) {
       res.status(400).json({ message: "Invalid user data" });
@@ -38,10 +43,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid credentials" });
       }
       
+      // Store session on server
+      req.session = req.session || {};
+      req.session.userId = user.id;
+      
       const { password: _, ...userWithoutPassword } = user;
       res.json({ user: userWithoutPassword });
     } catch (error) {
       res.status(400).json({ message: "Invalid login data" });
+    }
+  });
+
+  app.get("/api/auth/me", async (req, res) => {
+    try {
+      if (!req.session?.userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const user = await storage.getUser(req.session.userId);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+      
+      const { password, ...userWithoutPassword } = user;
+      res.json({ user: userWithoutPassword });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.post("/api/auth/logout", async (req, res) => {
+    try {
+      if (req.session) {
+        req.session.userId = null;
+      }
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Logout failed" });
     }
   });
 
@@ -114,6 +152,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ membershipInquiries, contactMessages });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch inquiries" });
+    }
+  });
+
+  // CSV Export endpoints
+  app.get("/api/admin/export/users", async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      const safeUsers = users.map(({ password, ...user }) => user);
+      
+      // Generate CSV
+      const headers = ['ID', 'Name', 'Email', 'Phone', 'Age', 'Fitness Goals', 'Created At'];
+      const csvRows = [headers.join(',')];
+      
+      safeUsers.forEach(user => {
+        const row = [
+          user.id,
+          `"${user.name}"`,
+          user.email,
+          user.phone || '',
+          user.age || '',
+          `"${user.fitnessGoals || ''}"`,
+          user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''
+        ];
+        csvRows.push(row.join(','));
+      });
+      
+      const csvContent = csvRows.join('\n');
+      
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="beastfit-users.csv"');
+      res.send(csvContent);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to export users" });
+    }
+  });
+
+  app.get("/api/admin/export/inquiries", async (req, res) => {
+    try {
+      const inquiries = await storage.getAllMembershipInquiries();
+      
+      // Generate CSV
+      const headers = ['ID', 'Name', 'Email', 'Phone', 'Message', 'Plan Type', 'Created At'];
+      const csvRows = [headers.join(',')];
+      
+      inquiries.forEach(inquiry => {
+        const row = [
+          inquiry.id,
+          `"${inquiry.name}"`,
+          inquiry.email,
+          inquiry.phone || '',
+          `"${inquiry.message || ''}"`,
+          inquiry.planType || '',
+          inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleDateString() : ''
+        ];
+        csvRows.push(row.join(','));
+      });
+      
+      const csvContent = csvRows.join('\n');
+      
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="beastfit-inquiries.csv"');
+      res.send(csvContent);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to export inquiries" });
+    }
+  });
+
+  app.get("/api/admin/export/reviews", async (req, res) => {
+    try {
+      const reviews = await storage.getAllReviews();
+      
+      // Generate CSV
+      const headers = ['ID', 'User Name', 'Rating', 'Message', 'Created At'];
+      const csvRows = [headers.join(',')];
+      
+      reviews.forEach(review => {
+        const row = [
+          review.id,
+          `"${review.userName}"`,
+          review.rating,
+          `"${review.message}"`,
+          review.createdAt ? new Date(review.createdAt).toLocaleDateString() : ''
+        ];
+        csvRows.push(row.join(','));
+      });
+      
+      const csvContent = csvRows.join('\n');
+      
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="beastfit-reviews.csv"');
+      res.send(csvContent);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to export reviews" });
     }
   });
 

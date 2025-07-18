@@ -17,16 +17,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for saved user in localStorage
-    const savedUser = localStorage.getItem('beastfit_user');
-    if (savedUser) {
+    // Try to get user from server first (for cross-browser persistence)
+    const tryServerAuth = async () => {
       try {
-        setUser(JSON.parse(savedUser));
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+          localStorage.setItem('beastfit_user', JSON.stringify(data.user));
+        } else {
+          // Fallback to localStorage
+          const savedUser = localStorage.getItem('beastfit_user');
+          if (savedUser) {
+            try {
+              setUser(JSON.parse(savedUser));
+            } catch (error) {
+              localStorage.removeItem('beastfit_user');
+            }
+          }
+        }
       } catch (error) {
-        localStorage.removeItem('beastfit_user');
+        // Fallback to localStorage if server is unreachable
+        const savedUser = localStorage.getItem('beastfit_user');
+        if (savedUser) {
+          try {
+            setUser(JSON.parse(savedUser));
+          } catch (error) {
+            localStorage.removeItem('beastfit_user');
+          }
+        }
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    tryServerAuth();
   }, []);
 
   const login = async (email: string, password: string) => {

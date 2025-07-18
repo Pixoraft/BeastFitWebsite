@@ -63,7 +63,7 @@ export class MemStorage implements IStorage {
     
     this.stats = {
       id: 1,
-      monthlyVisitors: 1234,
+      monthlyVisitors: 0,
       totalUsers: 0,
       totalReviews: 0,
       totalInquiries: 0,
@@ -185,9 +185,7 @@ export class MemStorage implements IStorage {
   }
 
   async incrementVisitors(): Promise<void> {
-    if (this.stats) {
-      this.stats.monthlyVisitors += 1;
-    }
+    this.stats.monthlyVisitors += 1;
   }
 }
 
