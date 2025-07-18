@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -101,12 +101,17 @@ export default function AuthModals() {
 
   // Listen for auth section scroll
   useEffect(() => {
+    let hasTriggered = false;
+    
     const handleScroll = () => {
       const authElement = document.getElementById('auth');
-      if (authElement) {
+      if (authElement && !hasTriggered) {
         const rect = authElement.getBoundingClientRect();
         if (rect.top <= window.innerHeight && rect.bottom >= 0) {
           setIsLoginOpen(true);
+          hasTriggered = true;
+          // Remove the event listener after triggering once
+          window.removeEventListener('scroll', handleScroll);
         }
       }
     };
@@ -131,10 +136,12 @@ export default function AuthModals() {
       <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
         <DialogContent className="bg-secondary max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-center">
-              <h3 className="text-2xl font-bold mb-2">Welcome Back</h3>
-              <p className="text-gray-400 font-normal">Sign in to your BeastFit Arena account</p>
+            <DialogTitle className="text-center text-2xl font-bold mb-2">
+              Welcome Back
             </DialogTitle>
+            <DialogDescription className="text-center text-gray-400">
+              Sign in to your BeastFit Arena account
+            </DialogDescription>
           </DialogHeader>
           
           <Form {...loginForm}>
@@ -197,6 +204,9 @@ export default function AuthModals() {
                     Sign up here
                   </button>
                 </p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Admin test: admin@beastfitarena.com / admin123
+                </p>
               </div>
             </form>
           </Form>
@@ -207,10 +217,12 @@ export default function AuthModals() {
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
         <DialogContent className="bg-secondary max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-center">
-              <h3 className="text-2xl font-bold mb-2">Join BeastFit Arena</h3>
-              <p className="text-gray-400 font-normal">Create your account to get started</p>
+            <DialogTitle className="text-center text-2xl font-bold mb-2">
+              Join BeastFit Arena
             </DialogTitle>
+            <DialogDescription className="text-center text-gray-400">
+              Create your account to get started
+            </DialogDescription>
           </DialogHeader>
           
           <Form {...registerForm}>

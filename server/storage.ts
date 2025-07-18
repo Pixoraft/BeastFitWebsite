@@ -145,7 +145,9 @@ export class MemStorage implements IStorage {
     const inquiry: MembershipInquiry = {
       ...insertInquiry,
       id,
-      createdAt: new Date()
+      createdAt: new Date(),
+      message: insertInquiry.message || null,
+      planType: insertInquiry.planType || null
     };
     this.membershipInquiries.set(id, inquiry);
     this.stats.totalInquiries = this.membershipInquiries.size + this.contactMessages.size;
@@ -161,7 +163,8 @@ export class MemStorage implements IStorage {
     const message: ContactMessage = {
       ...insertMessage,
       id,
-      createdAt: new Date()
+      createdAt: new Date(),
+      message: insertMessage.message || null
     };
     this.contactMessages.set(id, message);
     this.stats.totalInquiries = this.membershipInquiries.size + this.contactMessages.size;
@@ -182,7 +185,9 @@ export class MemStorage implements IStorage {
   }
 
   async incrementVisitors(): Promise<void> {
-    this.stats.monthlyVisitors += 1;
+    if (this.stats) {
+      this.stats.monthlyVisitors += 1;
+    }
   }
 }
 
