@@ -157,6 +157,6 @@ For technical questions or customization requests:
 
 ---
 
-**Built with ❤️ for modern fitness businesses**
+**Built with ❤️ for modern fitness businesses by Pixoraft**
 
 *BeastFit Arena - Where Strength Meets Technology*
